@@ -23,7 +23,7 @@ public class CalResult : State {
 		
 		CellMap.Instance.IsReadyUpgradeCell = false;
 
-		Debug.Log("Enter CalResult");
+		DBG.Log("Enter CalResult");
 	}
 	
 	public override State RunState(FSM fsm)
@@ -48,6 +48,6 @@ public class CalResult : State {
 	
 	public override void LeaveState(FSM fsm)
 	{
-		Debug.Log("Leave CalResult");
+		DBG.Log("Leave CalResult");
 	}
 }

@@ -12,7 +12,7 @@ public class Gameplay : State {
 	
 	public override void EnterState(FSM fsm)
 	{
-		Debug.Log("Enter Gameplay");
+		DBG.Log("Enter Gameplay");
 
 		if(gameplayFSM_ != null)
 		{
@@ -57,6 +57,6 @@ public class Gameplay : State {
 	
 	public override void LeaveState(FSM fsm)
 	{
-		Debug.Log("Leave Gameplay");
+		DBG.Log("Leave Gameplay");
 	}
 }

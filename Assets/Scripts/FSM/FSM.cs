@@ -44,7 +44,7 @@ public class FSM {
 	{
 		if(m_stateMap.ContainsKey(name) == false)
 		{
-			Debug.LogError("ChangeState with wrong state name: " + name);
+			DBG.LogError("ChangeState with wrong state name: " + name);
 			return;
 		}
 

@@ -11,7 +11,7 @@ public class MoveCell : State {
 	{
 		currTime = 0f;
 
-		Debug.Log("Enter MoveCell");
+		DBG.Log("Enter MoveCell");
 	}
 	
 	public override State RunState(FSM fsm)
@@ -26,6 +26,6 @@ public class MoveCell : State {
 	
 	public override void LeaveState(FSM fsm)
 	{
-		Debug.Log("Leave MoveCell");
+		DBG.Log("Leave MoveCell");
 	}
 }

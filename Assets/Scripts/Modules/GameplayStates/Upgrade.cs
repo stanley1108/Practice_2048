@@ -12,7 +12,7 @@ public class Upgrade : State {
 		currTime = 0f;
 		waitTime = GameConfig.CellBeginTime;
 
-		Debug.Log("Enter Upgrade");
+		DBG.Log("Enter Upgrade");
 
 		if(CellMap.Instance.IsReadyUpgradeCell == true)
 		{
@@ -34,6 +34,6 @@ public class Upgrade : State {
 	public override void LeaveState(FSM fsm)
 	{
 
-		Debug.Log("Leave Upgrade");
+		DBG.Log("Leave Upgrade");
 	}
 }

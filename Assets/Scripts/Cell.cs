@@ -93,6 +93,7 @@ public class Cell : MonoBehaviour {
 
 				currStateTime = 0;
 				state_ = State.Idle;
+				IsBomb = false;
 				break;
 			}
 			float newScale = 2f * currStateTime / GameConfig.CellBeginTime;
@@ -142,8 +143,7 @@ public class Cell : MonoBehaviour {
 				{
 					CellMap.Instance.IsReadyUpgradeCell = true;
 					CellMap.Instance.UpgradeLevel = (Level)((int)CurrLevel-1);
-//					CellMap.Instance.UpgradCells((Level)((int)CurrLevel-1));
-					IsBomb = false;
+			
 					CellMap.Instance.IsExistBomb = false;
 				}
 
@@ -164,8 +164,7 @@ public class Cell : MonoBehaviour {
 				{
 					CellMap.Instance.IsReadyUpgradeCell = true;
 					CellMap.Instance.UpgradeLevel = (Level)((int)CurrLevel-1);
-//					CellMap.Instance.UpgradCells((Level)((int)CurrLevel-1));
-					IsBomb = false;
+
 					CellMap.Instance.IsExistBomb = false;
 				}
 

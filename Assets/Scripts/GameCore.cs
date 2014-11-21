@@ -24,7 +24,7 @@ public class GameCore : Singleton<GameCore> {
 	{
 		if((index < 0)||(index >= numberTextures.Count))
 		{
-			Debug.LogError("GetCellTexture() use wrong index: " + index);
+			DBG.LogError("GetCellTexture() use wrong index: " + index);
 			return null;
 		}
 		return numberTextures[index];
@@ -143,15 +143,16 @@ public class GameCore : Singleton<GameCore> {
 	{
 		comboCount++;
 
-
 		if(comboCount >= GameConfig.ComboCountForDouble)
 		{
 			// ask cellMap to set one cell be a bomb
 			if(CellMap.Instance.IsExistBomb == false)
 				CellMap.Instance.RandomGenerateBomb();
+
+			stateMsg_ = "Combo : " + comboCount + "! - Merge the red cell to upgrade cells!!!!!";
 		}
-		
-		stateMsg_ = "Combo : " + comboCount;
+		else
+			stateMsg_ = "Combo : " + comboCount;
 	}
 
 	public void ResetComboCount()

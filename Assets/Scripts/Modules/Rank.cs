@@ -8,12 +8,12 @@ public class Rank : State {
 
 	public override void EnterState(FSM fsm)
 	{
-		Debug.Log("Enter Rank");
+		DBG.Log("Enter Rank");
 
 		if(GameCore.Instance.IsWin)
-			Debug.Log("Game win!!!!!!!!!!!!!!!!!!!!!!");
+			DBG.Log("Game win!!!!!!!!!!!!!!!!!!!!!!");
 		else
-			Debug.Log("Game lose!!!!!!!!!!!!!!!!!!!!!!");
+			DBG.Log("Game lose!!!!!!!!!!!!!!!!!!!!!!");
 
 		GameCore.Instance.SaveBestScore();
 
@@ -39,6 +39,6 @@ public class Rank : State {
 	{
 		GameCore.Instance.RestartGame();
 
-		Debug.Log("Leave Rank");
+		DBG.Log("Leave Rank");
 	}
 }

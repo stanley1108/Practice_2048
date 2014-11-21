@@ -270,7 +270,7 @@ public class CellMap : Singleton<CellMap> {
 		if(usedCells_.Contains(cellItem))
 			usedCells_.Remove(cellItem);
 		else
-			Debug.LogError("RecycleCell(): unUsed cell : "+cellItem.name);
+			DBG.LogError("RecycleCell(): unUsed cell : "+cellItem.name);
 		
 		cellItem.CurrLevel = Cell.Level.Num_2;
 		cellItem.gameObject.SetActive(false);
@@ -389,6 +389,7 @@ public class CellMap : Singleton<CellMap> {
 			{
 				cellItem.CurrLevel = (Cell.Level)(((int)cellItem.CurrLevel)+1);
 				cellItem.state_ = Cell.State.Begin;
+				cellItem.IsBomb = true;
 			}
 		}
 	}

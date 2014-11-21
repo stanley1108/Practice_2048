@@ -10,7 +10,7 @@ public class GenerateCell : State {
 	{
 		currTime = 0f;
 
-		Debug.Log("Enter GenerateCell");
+		DBG.Log("Enter GenerateCell");
 
 		CellMap.Instance.RandomGenerateCell();
 	}
@@ -27,6 +27,6 @@ public class GenerateCell : State {
 	
 	public override void LeaveState(FSM fsm)
 	{
-		Debug.Log("Leave GenerateCell");
+		DBG.Log("Leave GenerateCell");
 	}
 }

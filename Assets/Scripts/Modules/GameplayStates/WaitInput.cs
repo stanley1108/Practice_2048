@@ -58,6 +58,6 @@ public class WaitInput : State {
 	
 	public override void LeaveState(FSM fsm)
 	{
-		Debug.Log("Leave WaitInput");
+		DBG.Log("Leave WaitInput");
 	}
 }
