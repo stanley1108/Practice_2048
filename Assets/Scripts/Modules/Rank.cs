@@ -13,15 +13,17 @@ public class Rank : State {
 		currTime = 0;
 
 		Debug.Log("Enter Rank");
+
+		if(GameCore.Instance.IsWin)
+			Debug.Log("Game win!!!!!!!!!!!!!!!!!!!!!!");
+		else
+			Debug.Log("Game lose!!!!!!!!!!!!!!!!!!!!!!");
 	}
 	
 	public override State RunState(FSM fsm)
 	{
-		currTime += Time.deltaTime;
-		
-		if(currTime >= coundownTime)
+		if(InputManager.IsPressAnyKey())
 		{
-			Debug.Log("Change to next state");
 			return m_nextStates["Gameplay"];
 		}
 
@@ -30,6 +32,8 @@ public class Rank : State {
 	
 	public override void LeaveState(FSM fsm)
 	{
+		GameCore.Instance.RestartGame();
+
 		Debug.Log("Leave Rank");
 	}
 }

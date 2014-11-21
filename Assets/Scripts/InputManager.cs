@@ -22,6 +22,11 @@ static public class InputManager {
 	{
 		return Input.GetKeyDown(KeyCode.DownArrow);
 	}
+
+	static public bool IsPressAnyKey()
+	{
+		return Input.anyKeyDown;
+	}
 #else
 
 #endif

@@ -6,16 +6,23 @@ public class CalResult : State {
 	
 	public override void EnterState(FSM fsm)
 	{
-		
+		Debug.Log("Enter CalResult");
 	}
 	
 	public override State RunState(FSM fsm)
 	{
-		return null;
+		if(CellMap.Instance.IsMoveable() == false)
+			GameCore.Instance.LoseGame();
+
+
+		if(CellMap.Instance.Is2048())
+			GameCore.Instance.WinGame();
+
+		return m_nextStates["WaitInput"];
 	}
 	
 	public override void LeaveState(FSM fsm)
 	{
-
+		Debug.Log("Leave CalResult");
 	}
 }

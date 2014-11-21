@@ -10,14 +10,19 @@ public class Cell : MonoBehaviour {
 	public int targetPos_Y = 0;
 	private Vector3 targetPosition_ = Vector3.zero;
 
+	private float originScale_ = 1f;
+	private Vector3 currScaleVec_ = Vector3.zero;
+
 	public enum State
 	{
+		Begin,
 		Idle,
 		Moving,
+		MovingToMerge,
 		MovingToDie,
 	}
 
-	public State state_ = State.Idle;
+	public State state_ = State.Begin;
 
 	public enum Level
 	{
@@ -36,6 +41,8 @@ public class Cell : MonoBehaviour {
 		Count
 	}
 	SpriteRenderer spriteRenderer_;
+
+	[SerializeField]
 	private Level currLevel_ = Level.Num_2;
 	public Level CurrLevel
 	{
@@ -49,28 +56,48 @@ public class Cell : MonoBehaviour {
 		}
 	}
 
-
-	[SerializeField]
-	float totalMoveTime = 1f;
-
-	float currMoveTime = 0f;
-
+	float currStateTime = 0f;
 
 	void Awake () {
 		spriteRenderer_ = GetComponent<SpriteRenderer>();
+
+		originScale_ = transform.localScale.x;
+		currScaleVec_ = new Vector3(originScale_, originScale_, 1);
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		switch(state_)
 		{
+		case State.Begin:
+			currStateTime += Time.deltaTime;
+			if(currStateTime >= GameConfig.CellBeginTime)
+			{
+				currScaleVec_.x = originScale_;
+				currScaleVec_.y = originScale_;
+				transform.localScale = currScaleVec_;
+
+				currStateTime = 0;
+				state_ = State.Idle;
+				break;
+			}
+			float newScale = 2f * currStateTime / GameConfig.CellBeginTime;
+			if(newScale > 1)
+				newScale = 2f - newScale;
+
+			newScale = originScale_ + originScale_ * (GameConfig.CellMaxScale - 1f) * newScale;
+			currScaleVec_.x = newScale;
+			currScaleVec_.y = newScale;
+
+			transform.localScale = currScaleVec_;
+			break;
 		case State.Idle:
 			break;
 		case State.Moving:
-			currMoveTime += Time.deltaTime;
-			if(currMoveTime >= totalMoveTime)
+			currStateTime += Time.deltaTime;
+			if(currStateTime >= GameConfig.CellMoveTime)
 			{
-				currMoveTime = 0;
+				currStateTime = 0;
 				state_ = State.Idle;
 
 				transform.position = targetPosition_;
@@ -79,23 +106,37 @@ public class Cell : MonoBehaviour {
 				currPos_Y = targetPos_Y;
 				break;
 			}
-
-
-			transform.position = Vector3.Lerp(currPosition_, targetPosition_, currMoveTime / totalMoveTime);
+			transform.position = Vector3.Lerp(currPosition_, targetPosition_, currStateTime / GameConfig.CellMoveTime);
 
 			break;
-		case State.MovingToDie:
-			currMoveTime += Time.deltaTime;
-			if(currMoveTime >= totalMoveTime)
+		case State.MovingToMerge:
+			currStateTime += Time.deltaTime;
+			if(currStateTime >= GameConfig.CellMoveTime)
 			{
-				currMoveTime = 0;
+				currStateTime = 0;
+				state_ = State.Begin;
+				
+				transform.position = targetPosition_;
+				currPosition_ = targetPosition_;
+				currPos_X = targetPos_X;
+				currPos_Y = targetPos_Y;
+				break;
+			}
+			transform.position = Vector3.Lerp(currPosition_, targetPosition_, currStateTime / GameConfig.CellMoveTime);
+			
+			break;
+		case State.MovingToDie:
+			currStateTime += Time.deltaTime;
+			if(currStateTime >= GameConfig.CellMoveTime)
+			{
+				currStateTime = 0;
 
 				state_ = State.Idle;
-				CellMapManager.Instance.RecycleCell(this);
+				CellMap.Instance.RecycleCell(this);
 				break;
 			}
 
-			transform.position = Vector3.Lerp(currPosition_, targetPosition_, currMoveTime / totalMoveTime);
+			transform.position = Vector3.Lerp(currPosition_, targetPosition_, currStateTime / GameConfig.CellMoveTime);
 			break;
 		}
 
@@ -104,7 +145,7 @@ public class Cell : MonoBehaviour {
 	public void SetCurrPos(int x, int y)
 	{
 
-		float size = GameCore.Instance.cellSize_;
+		float size = GameConfig.CellSize;
 		currPosition_.x = x * size;
 		currPosition_.y = -y * size;
 		transform.position = currPosition_;
@@ -116,7 +157,7 @@ public class Cell : MonoBehaviour {
 	public void SetTargetPos(int x, int y)
 	{
 		
-		float size = GameCore.Instance.cellSize_;
+		float size = GameConfig.CellSize;
 		targetPosition_.x = x * size;
 		targetPosition_.y = -y * size;
 		

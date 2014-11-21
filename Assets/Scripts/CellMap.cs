@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class CellMapManager : Singleton<CellMapManager> {
+public class CellMap : Singleton<CellMap> {
 	public int mapSize_X_ = 4;
 	public int mapSize_Y_ = 4;
 	private List<List<Cell>> cellMaps_ = new List<List<Cell>>();
@@ -38,10 +38,19 @@ public class CellMapManager : Singleton<CellMapManager> {
 	private void TestMerge()
 	{
 		int[] testIntMap = {
-			2,2,2,2,
-			0,4,4,2,
-			2,2,8,8,
-			0,2,4,2,
+//			2,2,2,2,
+//			0,4,4,2,
+//			2,2,8,8,
+//			2,2,8,8,
+
+//			0,0,0,0,
+//			0,0,0,0,
+//			0,0,0,0,
+//			0,1024,1024,2,
+			 2, 4, 0,32,
+			 4, 8,16, 8,
+			 8,16,32, 16,
+			16, 8, 4, 8,
 		};
 		Cell newUnUsedCell = null;
 		for(int i=0; i<4; i++)
@@ -65,24 +74,41 @@ public class CellMapManager : Singleton<CellMapManager> {
 					newUnUsedCell.CurrLevel = Cell.Level.Num_4;
 				else if(currLevel == 8)
 					newUnUsedCell.CurrLevel = Cell.Level.Num_8;
+				else if(currLevel == 16)
+					newUnUsedCell.CurrLevel = Cell.Level.Num_16;
+				else if(currLevel == 32)
+					newUnUsedCell.CurrLevel = Cell.Level.Num_32;
+				else if(currLevel == 64)
+					newUnUsedCell.CurrLevel = Cell.Level.Num_64;
+				else if(currLevel == 128)
+					newUnUsedCell.CurrLevel = Cell.Level.Num_128;
+				else if(currLevel == 256)
+					newUnUsedCell.CurrLevel = Cell.Level.Num_256;
+				else if(currLevel == 512)
+					newUnUsedCell.CurrLevel = Cell.Level.Num_512;
+				else if(currLevel == 1024)
+					newUnUsedCell.CurrLevel = Cell.Level.Num_1024;
+				else if(currLevel == 2048)
+					newUnUsedCell.CurrLevel = Cell.Level.Num_2048;
+
 			}
 		}
 		
 		return;
 		
 		
-		List<Cell> mergeTargetCells = new List<Cell>();
-		GetMergeTargetCells(0, 0, 4, 1, false, ref mergeTargetCells);
-		MergeCells(mergeTargetCells, true, false);
-		
-		GetMergeTargetCells(0, 1, 4, 1, false, ref mergeTargetCells);
-		MergeCells(mergeTargetCells, true, false);
-		
-		GetMergeTargetCells(0, 2, 4, 1, false, ref mergeTargetCells);
-		MergeCells(mergeTargetCells, true, false);
-		
-		GetMergeTargetCells(0, 3, 4, 1, false, ref mergeTargetCells);
-		MergeCells(mergeTargetCells, true, false);
+//		List<Cell> mergeTargetCells = new List<Cell>();
+//		GetMergeTargetCells(0, 0, 4, 1, false, ref mergeTargetCells);
+//		MergeCells(mergeTargetCells, true, false);
+//		
+//		GetMergeTargetCells(0, 1, 4, 1, false, ref mergeTargetCells);
+//		MergeCells(mergeTargetCells, true, false);
+//		
+//		GetMergeTargetCells(0, 2, 4, 1, false, ref mergeTargetCells);
+//		MergeCells(mergeTargetCells, true, false);
+//		
+//		GetMergeTargetCells(0, 3, 4, 1, false, ref mergeTargetCells);
+//		MergeCells(mergeTargetCells, true, false);
 	}
 
 	public void GetMergeTargetCells(int headX, int headY, int rangeX, int rangeY, bool isRevert, ref List<Cell> output)
@@ -122,19 +148,21 @@ public class CellMapManager : Singleton<CellMapManager> {
 			cellMaps_[cellItem.targetPos_X][cellItem.targetPos_Y] = cellItem;
 		}
 	}
-	
-	public void MergeCells(List<Cell> originCell, bool moveXDir, bool isReverse)
+
+	//return: is any cell moved 
+	public bool MergeCells(List<Cell> originCell, bool moveXDir, bool isReverse)
 	{
-		Debug.Log("Before merge:");
-		string msg = "";
-		foreach(Cell cellItem in originCell)
-		{
-			if(cellItem == null)
-				continue;
-			msg += "Cell_" + cellItem.currPos_X + "_" + cellItem.currPos_Y + "is " + cellItem.CurrLevel + "\n";
-		}
-		
-		Debug.Log(msg);
+//		Debug.Log("Before merge:");
+//		string msg = "";
+//		foreach(Cell cellItem in originCell)
+//		{
+//			if(cellItem == null)
+//				continue;
+//			msg += "Cell_" + cellItem.currPos_X + "_" + cellItem.currPos_Y + "is " + cellItem.CurrLevel + "\n";
+//		}
+//		
+//		Debug.Log(msg);
+		bool isMoved = false;
 		
 		List<Cell> resultCell = new List<Cell>();
 		for(int i=0; i<originCell.Count; i++)
@@ -152,9 +180,13 @@ public class CellMapManager : Singleton<CellMapManager> {
 			if(resultCell[mergeIdx] == null)
 			{
 				resultCell[mergeIdx] = originCell[i];
-				
 				CalTargetPos(resultCell[mergeIdx], mergeIdx, maxIdx, moveXDir, isReverse);
 				resultCell[mergeIdx].state_ = Cell.State.Moving;
+
+				if((resultCell[mergeIdx].currPos_X != resultCell[mergeIdx].targetPos_X) ||
+				   (resultCell[mergeIdx].currPos_Y != resultCell[mergeIdx].targetPos_Y))
+					isMoved = true;
+
 				continue;
 			}
 			
@@ -166,9 +198,10 @@ public class CellMapManager : Singleton<CellMapManager> {
 				resultCell[mergeIdx] = originCell[i];
 				
 				CalTargetPos(resultCell[mergeIdx], mergeIdx, maxIdx, moveXDir, isReverse);
-				resultCell[mergeIdx].state_ = Cell.State.Moving;
+				resultCell[mergeIdx].state_ = Cell.State.MovingToMerge;
 				
 				mergeIdx++;
+				isMoved = true;
 			}
 			else
 			{
@@ -177,18 +210,24 @@ public class CellMapManager : Singleton<CellMapManager> {
 				
 				CalTargetPos(resultCell[mergeIdx], mergeIdx, maxIdx, moveXDir, isReverse);
 				resultCell[mergeIdx].state_ = Cell.State.Moving;
+
+				if((resultCell[mergeIdx].currPos_X != resultCell[mergeIdx].targetPos_X) ||
+				   (resultCell[mergeIdx].currPos_Y != resultCell[mergeIdx].targetPos_Y))
+					isMoved = true;
 			}
 		}
+
+		return isMoved;
 		
-		Debug.Log("After merge");
-		msg = "";
-		foreach(Cell cellItem in resultCell)
-		{
-			if(cellItem == null)
-				continue;
-			msg += "Cell_" + cellItem.targetPos_X + "_" + cellItem.targetPos_Y + "is " + cellItem.CurrLevel + "\n";
-		}
-		Debug.Log(msg);
+//		Debug.Log("After merge");
+//		msg = "";
+//		foreach(Cell cellItem in resultCell)
+//		{
+//			if(cellItem == null)
+//				continue;
+//			msg += "Cell_" + cellItem.targetPos_X + "_" + cellItem.targetPos_Y + "is " + cellItem.CurrLevel + "\n";
+//		}
+//		Debug.Log(msg);
 	}
 	
 	public Cell GetUnUsedCell()
@@ -202,6 +241,8 @@ public class CellMapManager : Singleton<CellMapManager> {
 		unUsedCells_.Remove(popedCell);
 		
 		popedCell.gameObject.SetActive(true);
+		popedCell.CurrLevel = Cell.Level.Num_2;
+		popedCell.state_ = Cell.State.Begin;
 		
 		return popedCell;
 	}
@@ -218,9 +259,86 @@ public class CellMapManager : Singleton<CellMapManager> {
 		
 		unUsedCells_.Add(cellItem);
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+
+	public bool IsMoveable()
+	{
+		Cell currCell = null;
+		Cell nextXCell = null;
+		Cell nextYCell = null;
+
+		for(int i=0; i<mapSize_X_; i++)
+		{
+			for(int j=0; j<mapSize_Y_; j++)
+			{
+				currCell = cellMaps_[i][j];
+				nextXCell = nextYCell = null;
+
+				if(i != mapSize_X_-1)
+					nextXCell = cellMaps_[i+1][j];
+				if(j != mapSize_Y_-1)
+					nextYCell = cellMaps_[i][j+1];
+
+				if(currCell == null)
+					return true;
+
+				if((nextXCell) && (currCell.CurrLevel == nextXCell.CurrLevel))
+					return true;
+
+				if((nextYCell) && (currCell.CurrLevel == nextYCell.CurrLevel))
+					return true;
+			}
+		}
+		return false;
+	}
+
+	public bool Is2048()
+	{
+		foreach(Cell cellItem in usedCells_)
+		{
+			if(cellItem.CurrLevel == Cell.Level.Num_2048)
+				return true;
+		}
+
+		return false;
+	}
+
+	public void ResetMap()
+	{
+		foreach(Cell cellItem in usedCells_)
+		{
+			cellItem.gameObject.SetActive(false);
+			unUsedCells_.Add(cellItem);
+		}
+
+		usedCells_.Clear();
+
+		for(int i=0; i < mapSize_X_; i++)
+		{
+			for(int j=0; j< mapSize_Y_; j++)
+			{
+				cellMaps_[i][j] = null;
+			}
+		}
+	}
+
+	public void RandomGenerateCell()
+	{
+		int posX = Random.Range(0, mapSize_X_);
+		int posY = Random.Range(0, mapSize_Y_);
+
+		while(true)
+		{
+			if(cellMaps_[posX][posY] == null)
+			{
+				Cell newCell = GetUnUsedCell();
+				newCell.SetCurrPos(posX, posY);
+
+				cellMaps_[posX][posY] = newCell;
+				return;
+			}
+
+			posX = Random.Range(0, mapSize_X_);
+			posY = Random.Range(0, mapSize_Y_);
+		}
 	}
 }

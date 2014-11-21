@@ -15,54 +15,39 @@ public class Gameplay : State {
 		Debug.Log("Enter Gameplay");
 
 		if(gameplayFSM_ != null)
+		{
+			CellMap.Instance.ResetMap();
+			gameplayFSM_.ChangeState("GenerateCell");
 			return;
+		}
 
+		gameplayFSM_ = new FSM();
+		
+		WaitInput wait = new WaitInput("WaitInput");
+		MoveCell moveCell = new MoveCell("MoveCell");
+		GenerateCell generateCell = new GenerateCell("GenerateCell");
+		CalResult calResult = new CalResult("CalResult");
+		
+		gameplayFSM_.AddState(wait);
+		gameplayFSM_.AddState(moveCell);
+		gameplayFSM_.AddState(generateCell);
+		gameplayFSM_.AddState(calResult);
+		
+		wait.AddNextState(moveCell.Name, moveCell);
+		moveCell.AddNextState(generateCell.Name, generateCell);
+		generateCell.AddNextState(calResult.Name, calResult);
+		calResult.AddNextState(wait.Name, wait);
+		
+		gameplayFSM_.ChangeState(wait);
 
 	}
 	
 	public override State RunState(FSM fsm)
 	{
+		gameplayFSM_.UpdateFSM();
 
-//		if(InputManager.IsSwipeRight())
-//		{
-//			Debug.Log("Change to next state");
-//			return m_nextStates["Rank"];
-//		}
-
-		List<Cell> mergeTargetCells = new List<Cell>();
-
-		if(InputManager.IsSwipeLeft())
-		{
-			for(int i=0; i<CellMapManager.Instance.mapSize_X_; i++)
-			{
-				CellMapManager.Instance.GetMergeTargetCells(0, i, 4, 1, false, ref mergeTargetCells);
-				CellMapManager.Instance.MergeCells(mergeTargetCells, true, false);
-			}
-		}
-		else if(InputManager.IsSwipeRight())
-		{
-			for(int i=0; i<CellMapManager.Instance.mapSize_X_; i++)
-			{
-				CellMapManager.Instance.GetMergeTargetCells(0, i, 4, 1, true, ref mergeTargetCells);
-				CellMapManager.Instance.MergeCells(mergeTargetCells, true, true);
-			}
-		}
-		else if(InputManager.IsSwipeUp())
-		{
-			for(int i=0; i<CellMapManager.Instance.mapSize_X_; i++)
-			{
-				CellMapManager.Instance.GetMergeTargetCells(i, 0, 1, 4, false, ref mergeTargetCells);
-				CellMapManager.Instance.MergeCells(mergeTargetCells, false, false);
-			}
-		}
-		else if(InputManager.IsSwipeDown())
-		{
-			for(int i=0; i<CellMapManager.Instance.mapSize_X_; i++)
-			{
-				CellMapManager.Instance.GetMergeTargetCells(i, 0, 1, 4, true, ref mergeTargetCells);
-				CellMapManager.Instance.MergeCells(mergeTargetCells, false, true);
-			}
-		}
+		if(GameCore.Instance.IsFinishedGame)
+			return m_nextStates["Rank"];
 
 		return null;
 	}

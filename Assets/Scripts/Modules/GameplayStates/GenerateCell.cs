@@ -1,9 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-//perform moving cells
-public class MoveCell : State {
-	public MoveCell(string name):base(name){}
+public class GenerateCell : State {
+	public GenerateCell(string name):base(name){}
 
 	float currTime = 0f;
 
@@ -11,21 +10,23 @@ public class MoveCell : State {
 	{
 		currTime = 0f;
 
-		Debug.Log("Enter MoveCell");
+		Debug.Log("Enter GenerateCell");
+
+		CellMap.Instance.RandomGenerateCell();
 	}
 	
 	public override State RunState(FSM fsm)
 	{
 		currTime += Time.deltaTime;
-
-		if(currTime >= GameConfig.CellMoveTime)
-			return m_nextStates["GenerateCell"];
+		
+		if(currTime >= GameConfig.CellBeginTime)
+			return m_nextStates["CalResult"];
 
 		return null;
 	}
 	
 	public override void LeaveState(FSM fsm)
 	{
-		Debug.Log("Leave MoveCell");
+		Debug.Log("Leave GenerateCell");
 	}
 }

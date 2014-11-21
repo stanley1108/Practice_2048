@@ -6,7 +6,16 @@ public class GameCore : Singleton<GameCore> {
 	//control modules
 	private FSM moduleFSM_ = null;
 
-	public float cellSize_ = 128;
+	private bool isFinishedGame_ = false;
+	public bool IsFinishedGame
+	{
+		get{return isFinishedGame_;}
+	}
+	private bool isWin_ = false;
+	public bool IsWin
+	{
+		get{return isWin_;}
+	}
 
 	[SerializeField]
 	List<Sprite> numberTextures;
@@ -41,10 +50,37 @@ public class GameCore : Singleton<GameCore> {
 
 	}
 
+	string msg_ = "Playing Game";
+	Rect msgShowRect = new Rect(10, 10, 300, 200);
+	void OnGUI()
+	{
+		GUI.Label(msgShowRect, msg_);
+	}
 
 
+	public void WinGame()
+	{
+		isFinishedGame_ = true;
+		isWin_ = true;
 
+		msg_ = "Game Win!!!!!!!!!!!!!!!!!!!!!!";
+	}
 
+	public void LoseGame()
+	{
+		isFinishedGame_ = true;
+		isWin_ = false;
+
+		msg_ = "Game Lose.........";
+	}
+
+	public void RestartGame()
+	{
+		isFinishedGame_ = false;
+		isWin_ = false;
+
+		msg_ = "Playing Game";
+	}
 
 	void LateUpdate () {
 		moduleFSM_.UpdateFSM();
