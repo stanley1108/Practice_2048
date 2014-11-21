@@ -41,7 +41,7 @@ public class Gameplay : State {
 		generateCell.AddNextState(calResult.Name, calResult);
 		calResult.AddNextState(wait.Name, wait);
 		
-		gameplayFSM_.ChangeState(wait);
+		gameplayFSM_.ChangeState(generateCell);
 
 	}
 	

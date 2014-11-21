@@ -52,7 +52,7 @@ public class CellMap : Singleton<CellMap> {
 			}
 		}
 		
-		TestMerge();
+		//TestMerge();
 	}
 
 	private void TestMerge()
@@ -113,22 +113,6 @@ public class CellMap : Singleton<CellMap> {
 
 			}
 		}
-		
-		return;
-		
-		
-//		List<Cell> mergeTargetCells = new List<Cell>();
-//		GetMergeTargetCells(0, 0, 4, 1, false, ref mergeTargetCells);
-//		MergeCells(mergeTargetCells, true, false);
-//		
-//		GetMergeTargetCells(0, 1, 4, 1, false, ref mergeTargetCells);
-//		MergeCells(mergeTargetCells, true, false);
-//		
-//		GetMergeTargetCells(0, 2, 4, 1, false, ref mergeTargetCells);
-//		MergeCells(mergeTargetCells, true, false);
-//		
-//		GetMergeTargetCells(0, 3, 4, 1, false, ref mergeTargetCells);
-//		MergeCells(mergeTargetCells, true, false);
 	}
 
 	public void GetMergeTargetCells(int headX, int headY, int rangeX, int rangeY, bool isRevert, ref List<Cell> output)

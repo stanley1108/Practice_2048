@@ -2,7 +2,8 @@
 using System.Collections;
 
 static public class InputManager {
-#if UNITY_EDITOR
+#if UNITY_EDITOR || UNITY_STANDALONE
+
 	static public bool IsSwipeRight()
 	{
 		return Input.GetKeyDown(KeyCode.RightArrow);
