@@ -8,4 +8,8 @@ static public class GameConfig {
 	public const float CellBeginTime = 0.2f;
 
 	public const float CellMaxScale = 1.2f;
+
+	public const int ComboCountForDouble = 5;
+
+	public const float RankTime = 2f;
 }

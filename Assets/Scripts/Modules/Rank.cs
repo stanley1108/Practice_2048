@@ -4,14 +4,10 @@ using System.Collections;
 public class Rank : State {
 	public Rank(string name):base(name){}
 
-	//test
 	float currTime = 0;
-	float coundownTime = 3f;
 
 	public override void EnterState(FSM fsm)
 	{
-		currTime = 0;
-
 		Debug.Log("Enter Rank");
 
 		if(GameCore.Instance.IsWin)
@@ -20,10 +16,17 @@ public class Rank : State {
 			Debug.Log("Game lose!!!!!!!!!!!!!!!!!!!!!!");
 
 		GameCore.Instance.SaveBestScore();
+
+		currTime = 0;
 	}
 	
 	public override State RunState(FSM fsm)
 	{
+		currTime += Time.deltaTime;
+
+		if(currTime < GameConfig.RankTime)
+			return null;
+
 		if(InputManager.IsPressAnyKey())
 		{
 			return m_nextStates["Gameplay"];

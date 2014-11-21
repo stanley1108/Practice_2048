@@ -60,7 +60,12 @@ public class GameCore : Singleton<GameCore> {
 	Rect bestSMsgUIRect_ = new Rect(10, 40, 300, 100);
 
 	int currScore_ = 0;
+	public int CurrScore
+	{
+		get{return currScore_;}
+	}
 	int bestScore_ = 0;
+	int comboCount = 0;
 
 	void OnGUI()
 	{
@@ -105,6 +110,7 @@ public class GameCore : Singleton<GameCore> {
 		stateMsg_ = "Playing Game";
 
 		currScore_ = 0;
+		ResetComboCount();
 	}
 
 	public void AddScore(int plusScore)
@@ -131,6 +137,28 @@ public class GameCore : Singleton<GameCore> {
 	{
 		PlayerPrefs.SetInt("bestScore", bestScore_);
 		PlayerPrefs.Save();
+	}
+
+	public void AddComboCount()
+	{
+		comboCount++;
+
+
+		if(comboCount >= GameConfig.ComboCountForDouble)
+		{
+			// ask cellMap to set one cell be a bomb
+			if(CellMap.Instance.IsExistBomb == false)
+				CellMap.Instance.RandomGenerateBomb();
+		}
+		
+		stateMsg_ = "Combo : " + comboCount;
+	}
+
+	public void ResetComboCount()
+	{
+		comboCount = 0;
+
+		stateMsg_  = "Playing Game";
 	}
 
 	void LateUpdate () {

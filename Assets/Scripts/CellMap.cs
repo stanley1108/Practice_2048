@@ -12,6 +12,26 @@ public class CellMap : Singleton<CellMap> {
 
 	public GameObject baseCell;
 
+	private bool isReadyUpgradeCell_ = false;
+	public bool IsReadyUpgradeCell
+	{
+		get{return isReadyUpgradeCell_;}
+		set{isReadyUpgradeCell_ = value;}
+	}
+
+	private Cell.Level upgradLevel_ = Cell.Level.Num_2;
+	public Cell.Level UpgradeLevel
+	{
+		set{upgradLevel_ = value;}
+	}
+
+	private bool isExistBomb_ = false;
+	public bool IsExistBomb
+	{
+		get{return isExistBomb_;}
+		set{isExistBomb_ = value;}
+	}
+
 	// Use this for initialization
 	void Start () {
 		//setup cells
@@ -240,9 +260,7 @@ public class CellMap : Singleton<CellMap> {
 		usedCells_.Add(popedCell);
 		unUsedCells_.Remove(popedCell);
 		
-		popedCell.gameObject.SetActive(true);
-		popedCell.CurrLevel = Cell.Level.Num_2;
-		popedCell.state_ = Cell.State.Begin;
+		popedCell.Reset();
 		
 		return popedCell;
 	}
@@ -319,6 +337,9 @@ public class CellMap : Singleton<CellMap> {
 				cellMaps_[i][j] = null;
 			}
 		}
+
+		isExistBomb_ = false;
+		isReadyUpgradeCell_ = false;
 	}
 
 	public void RandomGenerateCell()
@@ -339,6 +360,36 @@ public class CellMap : Singleton<CellMap> {
 
 			posX = Random.Range(0, mapSize_X_);
 			posY = Random.Range(0, mapSize_Y_);
+		}
+	}
+
+	public void RandomGenerateBomb()
+	{
+		int bombIdx = Random.Range(0, usedCells_.Count);
+
+		while(true)
+		{
+			if((usedCells_[bombIdx].CurrLevel != Cell.Level.Num_1024) &&
+			   (usedCells_[bombIdx].CurrLevel != Cell.Level.Num_2048))
+			{
+				usedCells_[bombIdx].IsBomb = true;
+				break;
+			}
+			bombIdx = Random.Range(0, usedCells_.Count);
+		}
+
+		isExistBomb_ = true;
+	}
+
+	public void UpgradCells()
+	{
+		foreach(Cell cellItem in usedCells_)
+		{
+			if(cellItem.CurrLevel == upgradLevel_)
+			{
+				cellItem.CurrLevel = (Cell.Level)(((int)cellItem.CurrLevel)+1);
+				cellItem.state_ = Cell.State.Begin;
+			}
 		}
 	}
 }

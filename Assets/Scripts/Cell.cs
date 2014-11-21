@@ -56,6 +56,20 @@ public class Cell : MonoBehaviour {
 		}
 	}
 
+	[SerializeField]
+	GameObject bombInspectorObj_;
+	private bool isBomb_ = false;
+	public bool IsBomb
+	{
+		get{return isBomb_;}
+		set
+		{
+			isBomb_ = value;
+			//setup graphics
+			bombInspectorObj_.SetActive(isBomb_);
+		}
+	}
+
 	float currStateTime = 0f;
 
 	void Awake () {
@@ -123,6 +137,16 @@ public class Cell : MonoBehaviour {
 
 				float plusScore = Mathf.Pow(2f,(float)currLevel_ + 1f);
 				GameCore.Instance.AddScore((int)plusScore);
+
+				if(isBomb_)
+				{
+					CellMap.Instance.IsReadyUpgradeCell = true;
+					CellMap.Instance.UpgradeLevel = (Level)((int)CurrLevel-1);
+//					CellMap.Instance.UpgradCells((Level)((int)CurrLevel-1));
+					IsBomb = false;
+					CellMap.Instance.IsExistBomb = false;
+				}
+
 				break;
 			}
 			transform.position = Vector3.Lerp(currPosition_, targetPosition_, currStateTime / GameConfig.CellMoveTime);
@@ -135,6 +159,16 @@ public class Cell : MonoBehaviour {
 				currStateTime = 0;
 
 				state_ = State.Idle;
+
+				if(isBomb_)
+				{
+					CellMap.Instance.IsReadyUpgradeCell = true;
+					CellMap.Instance.UpgradeLevel = (Level)((int)CurrLevel-1);
+//					CellMap.Instance.UpgradCells((Level)((int)CurrLevel-1));
+					IsBomb = false;
+					CellMap.Instance.IsExistBomb = false;
+				}
+
 				CellMap.Instance.RecycleCell(this);
 				break;
 			}
@@ -143,6 +177,14 @@ public class Cell : MonoBehaviour {
 			break;
 		}
 
+	}
+
+	public void Reset()
+	{
+		gameObject.SetActive(true);
+		CurrLevel = Cell.Level.Num_2;
+		state_ = Cell.State.Begin;
+		IsBomb = false;
 	}
 
 	public void SetCurrPos(int x, int y)

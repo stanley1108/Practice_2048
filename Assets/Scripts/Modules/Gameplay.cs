@@ -25,16 +25,19 @@ public class Gameplay : State {
 		
 		WaitInput wait = new WaitInput("WaitInput");
 		MoveCell moveCell = new MoveCell("MoveCell");
+		Upgrade upgrade = new Upgrade("Upgrade");
 		GenerateCell generateCell = new GenerateCell("GenerateCell");
 		CalResult calResult = new CalResult("CalResult");
 		
 		gameplayFSM_.AddState(wait);
 		gameplayFSM_.AddState(moveCell);
+		gameplayFSM_.AddState(upgrade);
 		gameplayFSM_.AddState(generateCell);
 		gameplayFSM_.AddState(calResult);
 		
 		wait.AddNextState(moveCell.Name, moveCell);
-		moveCell.AddNextState(generateCell.Name, generateCell);
+		moveCell.AddNextState(upgrade.Name, upgrade);
+		upgrade.AddNextState(generateCell.Name, generateCell);
 		generateCell.AddNextState(calResult.Name, calResult);
 		calResult.AddNextState(wait.Name, wait);
 		

@@ -19,7 +19,7 @@ public class MoveCell : State {
 		currTime += Time.deltaTime;
 
 		if(currTime >= GameConfig.CellMoveTime)
-			return m_nextStates["GenerateCell"];
+			return m_nextStates["Upgrade"];
 
 		return null;
 	}
