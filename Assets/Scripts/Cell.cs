@@ -91,7 +91,7 @@ public class Cell : MonoBehaviour {
 				currMoveTime = 0;
 
 				state_ = State.Idle;
-				GameCore.Instance.RecycleCell(this);
+				CellMapManager.Instance.RecycleCell(this);
 				break;
 			}
 

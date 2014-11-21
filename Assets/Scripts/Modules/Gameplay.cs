@@ -33,34 +33,34 @@ public class Gameplay : State {
 
 		if(InputManager.IsSwipeLeft())
 		{
-			for(int i=0; i<GameCore.Instance.mapSize_X_; i++)
+			for(int i=0; i<CellMapManager.Instance.mapSize_X_; i++)
 			{
-				GameCore.Instance.GetMergeTargetCells(0, i, 4, 1, false, ref mergeTargetCells);
-				GameCore.Instance.MergeCells(mergeTargetCells, true, false);
+				CellMapManager.Instance.GetMergeTargetCells(0, i, 4, 1, false, ref mergeTargetCells);
+				CellMapManager.Instance.MergeCells(mergeTargetCells, true, false);
 			}
 		}
 		else if(InputManager.IsSwipeRight())
 		{
-			for(int i=0; i<GameCore.Instance.mapSize_X_; i++)
+			for(int i=0; i<CellMapManager.Instance.mapSize_X_; i++)
 			{
-				GameCore.Instance.GetMergeTargetCells(0, i, 4, 1, true, ref mergeTargetCells);
-				GameCore.Instance.MergeCells(mergeTargetCells, true, true);
+				CellMapManager.Instance.GetMergeTargetCells(0, i, 4, 1, true, ref mergeTargetCells);
+				CellMapManager.Instance.MergeCells(mergeTargetCells, true, true);
 			}
 		}
 		else if(InputManager.IsSwipeUp())
 		{
-			for(int i=0; i<GameCore.Instance.mapSize_X_; i++)
+			for(int i=0; i<CellMapManager.Instance.mapSize_X_; i++)
 			{
-				GameCore.Instance.GetMergeTargetCells(i, 0, 1, 4, false, ref mergeTargetCells);
-				GameCore.Instance.MergeCells(mergeTargetCells, false, false);
+				CellMapManager.Instance.GetMergeTargetCells(i, 0, 1, 4, false, ref mergeTargetCells);
+				CellMapManager.Instance.MergeCells(mergeTargetCells, false, false);
 			}
 		}
 		else if(InputManager.IsSwipeDown())
 		{
-			for(int i=0; i<GameCore.Instance.mapSize_X_; i++)
+			for(int i=0; i<CellMapManager.Instance.mapSize_X_; i++)
 			{
-				GameCore.Instance.GetMergeTargetCells(i, 0, 1, 4, true, ref mergeTargetCells);
-				GameCore.Instance.MergeCells(mergeTargetCells, false, true);
+				CellMapManager.Instance.GetMergeTargetCells(i, 0, 1, 4, true, ref mergeTargetCells);
+				CellMapManager.Instance.MergeCells(mergeTargetCells, false, true);
 			}
 		}
 
