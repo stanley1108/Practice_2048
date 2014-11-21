@@ -47,23 +47,46 @@ public class GameCore : Singleton<GameCore> {
 
 		moduleFSM_.ChangeState(gamePlayModule);
 
-
+		LoadBestScore();
 	}
 
-	string msg_ = "Playing Game";
-	Rect msgShowRect = new Rect(10, 10, 300, 200);
+	string stateMsg_ = "Playing Game";
+	Rect stateMsgUIRect_ = new Rect(10, 10, 300, 100);
+
+	string scoreMsg_ = "Current Score:00000";
+	Rect scoreMsgUIRect_ = new Rect(10, 25, 300, 100);
+
+	string bestScoreMsg_ = "Best Score:00000";
+	Rect bestSMsgUIRect_ = new Rect(10, 40, 300, 100);
+
+	int currScore_ = 0;
+	int bestScore_ = 0;
+
 	void OnGUI()
 	{
-		GUI.Label(msgShowRect, msg_);
+		SetCurrScoreMsg(currScore_);
+		SetBestScoreMsg(bestScore_);
+		GUI.Label(stateMsgUIRect_, stateMsg_);
+		GUI.Label(scoreMsgUIRect_, scoreMsg_);
+		GUI.Label(bestSMsgUIRect_, bestScoreMsg_);
 	}
 
+	public void SetBestScoreMsg(int score)
+	{
+		bestScoreMsg_ = string.Format("Best Score:{0:D5}", score);
+	}
+
+	public void SetCurrScoreMsg(int score)
+	{
+		scoreMsg_ = string.Format("Current Score:{0:D5}", score);
+	}
 
 	public void WinGame()
 	{
 		isFinishedGame_ = true;
 		isWin_ = true;
 
-		msg_ = "Game Win!!!!!!!!!!!!!!!!!!!!!!";
+		stateMsg_ = "Game Win!!!!!!!!!!!!!!!!!!!!!!";
 	}
 
 	public void LoseGame()
@@ -71,7 +94,7 @@ public class GameCore : Singleton<GameCore> {
 		isFinishedGame_ = true;
 		isWin_ = false;
 
-		msg_ = "Game Lose.........";
+		stateMsg_ = "Game Lose.........";
 	}
 
 	public void RestartGame()
@@ -79,7 +102,35 @@ public class GameCore : Singleton<GameCore> {
 		isFinishedGame_ = false;
 		isWin_ = false;
 
-		msg_ = "Playing Game";
+		stateMsg_ = "Playing Game";
+
+		currScore_ = 0;
+	}
+
+	public void AddScore(int plusScore)
+	{
+		if(plusScore <= 0)
+			return;
+
+		currScore_ += plusScore;
+
+		if(currScore_ > bestScore_)
+		{
+			bestScore_ = currScore_;
+		}
+	}
+
+	public void LoadBestScore()
+	{
+		if(PlayerPrefs.HasKey("bestScore"))
+			bestScore_ = PlayerPrefs.GetInt("bestScore");
+
+	}
+
+	public void SaveBestScore()
+	{
+		PlayerPrefs.SetInt("bestScore", bestScore_);
+		PlayerPrefs.Save();
 	}
 
 	void LateUpdate () {

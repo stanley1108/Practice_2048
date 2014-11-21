@@ -120,6 +120,9 @@ public class Cell : MonoBehaviour {
 				currPosition_ = targetPosition_;
 				currPos_X = targetPos_X;
 				currPos_Y = targetPos_Y;
+
+				float plusScore = Mathf.Pow(2f,(float)currLevel_ + 1f);
+				GameCore.Instance.AddScore((int)plusScore);
 				break;
 			}
 			transform.position = Vector3.Lerp(currPosition_, targetPosition_, currStateTime / GameConfig.CellMoveTime);

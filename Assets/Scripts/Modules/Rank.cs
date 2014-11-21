@@ -18,6 +18,8 @@ public class Rank : State {
 			Debug.Log("Game win!!!!!!!!!!!!!!!!!!!!!!");
 		else
 			Debug.Log("Game lose!!!!!!!!!!!!!!!!!!!!!!");
+
+		GameCore.Instance.SaveBestScore();
 	}
 	
 	public override State RunState(FSM fsm)
