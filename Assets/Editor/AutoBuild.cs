@@ -1,11 +1,12 @@
-﻿using UnityEditor;
+﻿using UnityEngine;
+using UnityEditor;
 
-class AutoBuild
+class AutoBuild:MonoBehaviour
 {
 	static void PerformBuild ()
 	{
 		string[] scenes = { "Assets/Scene/Gameplay.unity" };
-		BuildPipeline.BuildPlayer(GetScenePaths(), "~/Desktop/my2048.app", BuildTarget.StandaloneOSXIntel, BuildOptions.None);
+		BuildPipeline.BuildPlayer(GetScenePaths(), Application.dataPath + "/my2048.app", BuildTarget.StandaloneOSXIntel, BuildOptions.None);
 	}
 
 	static string[] GetScenePaths()
