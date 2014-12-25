@@ -5,7 +5,7 @@ class AutoBuild
 	static void PerformBuild ()
 	{
 		string[] scenes = { "Assets/Scene/Gameplay.unity" };
-		BuildPipeline.BuildPlayer(GetScenePaths(), "my2048.app", BuildTarget.StandaloneOSXIntel, BuildOptions.None);
+		BuildPipeline.BuildPlayer(GetScenePaths(), "~/Desktop/my2048.app", BuildTarget.StandaloneOSXIntel, BuildOptions.None);
 	}
 
 	static string[] GetScenePaths()
